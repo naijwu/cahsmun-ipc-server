@@ -133,12 +133,14 @@ router.delete('/article/:id', verifyToken, getArticle, async (req, res) => {
 router.post('/auth/login', async (req, res) => {
     // Check if email exists
     const accountInDB = await Account.findOne({username: req.body.username});
+
     if(!accountInDB) return res.status(400).json({
         message: 'Username or password is wrong'
     });
     
     // Check if password is valid
-    const validPass = (accountInDB.password === req.body.password);
+    const validPass = (accountInDB.password.toUpperCase() === req.body.password.toUpperCase());
+
     if(!validPass) return res.status(400).json({
         message: 'Username or password is wrong'
     });
